@@ -1,6 +1,5 @@
 'use strict';
 var app = app || {};
-
 (function (module) {
   var articleView = {};
 
@@ -140,5 +139,5 @@ var app = app || {};
     $('#blog-stats .articles').text(app.Article.all.length);
     $('#blog-stats .words').text(app.Article.numWordsAll());
   };
-  module.Article = articleView;
+  module.articleView = articleView;
 })(app);
