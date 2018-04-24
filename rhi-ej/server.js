@@ -6,7 +6,7 @@ const fs = require('fs');
 const express = require('express');
 const PORT = process.env.PORT || 3000;
 const app = express();
-const conString = '';
+const conString = 'postgres://localhost:5432';
 const client = new pg.Client(conString);
 client.connect();
 client.on('error', err => {
@@ -17,8 +17,8 @@ app.use(express.json());
 app.use(express.urlencoded());
 app.use(express.static('./public'));
 
-app.get('/new', (request, response) => response.sendFile('new.html', {root: './public'}));
-app.get('/admin', (request, response) => response.sendFile('admin.html', {root: './public'}));
+app.get('/new', (request, response) => response.sendFile('new.html', { root: './public' }));
+app.get('/admin', (request, response) => response.sendFile('admin.html', { root: './public' }));
 app.get('/articles', (request, response) => {
   client.query(`
     SELECT * FROM articles
@@ -76,7 +76,7 @@ app.put('/articles/:id', (request, response) => {
     SET author=$1, "authorUrl"=$2
     WHERE author_id=$3
     `,
-  [request.body.author, request.body.authorUrl, request.body.author_id]
+    [request.body.author, request.body.authorUrl, request.body.author_id]
   )
     .then(() => {
       client.query(`
@@ -84,14 +84,14 @@ app.put('/articles/:id', (request, response) => {
       SET author_id=$1, title=$2, category=$3, "publishedOn"=$4, body=$5
       WHERE article_id=$6
       `,
-      [
-        request.body.author_id,
-        request.body.title,
-        request.body.category,
-        request.body.publishedOn,
-        request.body.body,
-        request.params.id
-      ]
+        [
+          request.body.author_id,
+          request.body.title,
+          request.body.category,
+          request.body.publishedOn,
+          request.body.body,
+          request.params.id
+        ]
       )
     })
     .then(() => response.send('Update complete'))
@@ -145,7 +145,7 @@ function loadArticles() {
             FROM authors
             WHERE author=$5;
           `,
-            [ele.title, ele.category, ele.publishedOn, ele.body, ele.author]
+              [ele.title, ele.category, ele.publishedOn, ele.body, ele.author]
             )
               .catch(console.error);
           })

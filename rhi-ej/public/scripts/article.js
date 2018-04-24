@@ -24,7 +24,7 @@ var app = app || {};
     /* OLD forEach():
     articleData.forEach(articleObject => Article.all.push(new Article(articleObject)));
     */
-
+    Article.all = articleData.map(e => new Article(e));
   };
 
   Article.fetchAll = callback => {
@@ -36,10 +36,12 @@ var app = app || {};
   };
 
   Article.numWordsAll = () => {
-    return Article.all.map(article => {
-      return article.body.split(' ').length
-    }).reduce((totalArticlesTotal, currentArticleTotal) => totalArticlesTotal + currentArticleTotal);
+    return Article.all.map(numWords => numWords.body.split(' ').length).reduce((a, c) => a + c)
   };
+  //   return Article.all.map(article => {
+  //     return article.body.split(' ').length
+  //   }).reduce((totalArticlesTotal, currentArticleTotal) => { totalArticlesTotal + currentArticleTotal }, []);
+  // };
 
   Article.allAuthors = () => {
     return Article.all.map(article => article.author)
@@ -47,25 +49,17 @@ var app = app || {};
         if (!totalAuthors.includes(currentAuthor)) {
           totalAuthors.push(currentAuthor);
         }
-        console.log(totalAuthors);
         return totalAuthors;
-      });
+      }, []);
   };
 
   Article.numWordsByAuthor = () => {
     return Article.allAuthors().map(author => {
+      //console.log(Article.all.filter(article => article.author === author).map(article => article.body.split(' ').length).reduce((a, c) => a + c));
       return {
         authorName: author,
-        authWordCount: Article.all.filter(article => article.author.includes(author)).map(article => article.body.split(' ').length).reduce((a, c) => a + c)
-        //Article.all.filter(author => )
+        authWordCount: Article.all.filter(article => article.author === author).map(article => article.body.split(' ').length).reduce((a, c) => a + c)
       };
-      // let allAuthWords = [];
-      // for (let i in Article.all) {
-      //   if (Article.all[i].includes(author)) {
-      //     allAuthWords.push(Article.body.split(' ').length.reduce((allWords, currentArtWords) => allWords + currentArtWords));
-      //   }
-      // }
-      // return allAuthWords;
     });
   };
 
